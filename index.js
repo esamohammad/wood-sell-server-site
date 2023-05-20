@@ -126,7 +126,32 @@ async function run() {
     //!Post Api -Bookings
     app.post('/bookings', async (req, res) => {
       const booking = req.body
-      console.log(booking);
+      // console.log(booking);
+
+
+
+      //!Quary each email address is allow for one product.
+      const query = {
+        clientEmail: booking.clientEmail,
+        productName: booking.productName
+      }
+
+
+
+      const alreadyBooked = await bookingsCollection.find(query).toArray();
+
+
+
+
+
+      if (alreadyBooked.length) {
+        const message = `You have already booked ${booking.productName}`
+        return res.send({ acknowledged: false, message })
+      }
+
+
+
+
       const result = await bookingsCollection.insertOne(booking);
       res.send(result);
     })
