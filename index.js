@@ -60,19 +60,6 @@ function verifyJWT(req, res, next) {
 
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-
 //!=========================================
 //!main db worksPlace
 async function run() {
@@ -255,8 +242,13 @@ async function run() {
 
 
 
-
-
+    //!=========================================
+    //!Get Api-Users.(NB: This is a open api, to be promoted by jwt and admin users.)
+    app.get('/users', async (req, res) => {
+      const query = {};
+      const users = await usersCollection.find(query).toArray();
+      res.send(users);
+    });
 
 
 
@@ -268,7 +260,7 @@ async function run() {
 
 
     //!=========================================
-    //!Post Api-Users.
+    //!Post Api-Users.(data send from client to save users into DB)
     app.post('/users', async (req, res) => {
       const user = req.body;
       console.log(user);
