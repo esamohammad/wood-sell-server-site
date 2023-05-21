@@ -31,6 +31,48 @@ const client = new MongoClient(uri, {
 
 
 
+
+//!=========================================
+//!Jwt function for verifying
+function verifyJWT(req, res, next) {
+
+  const authHeader = req.headers.authorization;
+  if (!authHeader) {
+    return res.status(401).send('unauthorized access');
+  }
+
+  const token = authHeader.split(' ')[1];
+
+  jwt.verify(token, process.env.ACCESS_TOKEN, function (err, decoded) {
+    if (err) {
+      return res.status(403).send({ message: 'forbidden access' })
+    }
+    req.decoded = decoded;
+    next();
+  })
+
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 //!=========================================
 //!main db worksPlace
 async function run() {
@@ -137,8 +179,17 @@ async function run() {
 
     //!=========================================
     //!GET Api -Bookings , Dashboard, My Orders
-    app.get('/bookings', async (req, res) => {
+    app.get('/bookings', verifyJWT, async (req, res) => {
       const email = req.query.email;
+
+      
+      //!From JWT Function
+      const decodedEmail = req.decoded.email;
+      if (email !== decodedEmail) {
+        return res.status(403).send({ message: 'forbidden access' });
+      }
+
+
       const query = { clientEmail: email }
       // console.log(query)
       const bookings = await bookingsCollection.find(query).toArray();
@@ -195,7 +246,7 @@ async function run() {
         return res.send({ accessToken: token });
       }
       console.log(user)
-      res.status(403).send({ accessToken: '' })
+      res.status(403).send({ accessToken: 'Unauthorized Access' })
     });
 
 
