@@ -2,6 +2,7 @@ const express = require('express')
 const cors = require('cors')
 const { MongoClient, ServerApiVersion, ObjectId } = require('mongodb');
 
+
 require('dotenv').config()
 
 const app = express()
@@ -17,8 +18,6 @@ app.use(express.json())
 const uri = `mongodb+srv://${process.env.DB_USER}:${process.env.DB_PASSWORD}@cluster0.ddkgs5g.mongodb.net/?retryWrites=true&w=majority`;
 console.log(uri)
 
-
-
 const client = new MongoClient(uri, {
   serverApi: {
     version: ServerApiVersion.v1,
@@ -28,7 +27,12 @@ const client = new MongoClient(uri, {
 });
 
 
-//!main
+
+
+
+
+//!=========================================
+//!main db worksPlace
 async function run() {
   try {
 
@@ -38,6 +42,11 @@ async function run() {
     const itemsCollection = client.db('wood_sell').collection('items');
     const advertiseCollection = client.db('wood_sell').collection('advertise');
     const bookingsCollection = client.db('wood_sell').collection('bookings');
+    const usersCollection = client.db('wood_sell').collection('users');
+
+
+
+
 
     //!***
     //!=========================================
@@ -50,6 +59,8 @@ async function run() {
     })
 
 
+
+
     //!=========================================
     //!Single category
     app.get('/categories/:id', async (req, res) => {
@@ -58,6 +69,8 @@ async function run() {
       const result = await categoriesCollection.findOne(filter)
       res.send(result)
     })
+
+
 
     //!=========================================
     //!All products
@@ -69,6 +82,8 @@ async function run() {
     })
 
 
+
+
     //!=========================================
     //!Single product by id
     app.get('/products/:id', async (req, res) => {
@@ -77,6 +92,8 @@ async function run() {
       const product = await productsCollection.findOne(query);
       res.send(product)
     })
+
+
 
 
     //!***
@@ -90,6 +107,8 @@ async function run() {
     })
 
 
+
+
     //!=========================================
     //!All advertise
     app.get('/advertise', async (req, res) => {
@@ -98,14 +117,6 @@ async function run() {
       const advertise = await cursor.toArray();
       res.send(advertise);
     })
-
-
-
-
-
-
-
-
 
 
 
@@ -124,34 +135,15 @@ async function run() {
 
 
 
-
     //!=========================================
     //!GET Api -Bookings , Dashboard, My Orders
     app.get('/bookings', async (req, res) => {
       const email = req.query.email;
       const query = { clientEmail: email }
-      console.log(query)
+      // console.log(query)
       const bookings = await bookingsCollection.find(query).toArray();
       res.send(bookings);
     })
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 
 
@@ -161,6 +153,7 @@ async function run() {
     app.post('/bookings', async (req, res) => {
       const booking = req.body
       // console.log(booking);
+
 
 
       //!Limit Bookings
@@ -190,9 +183,14 @@ async function run() {
 
 
 
-
-
-
+    //!=========================================
+    //!Post Api-Users.
+    app.post('/users', async (req, res) => {
+      const user = req.body;
+      console.log(user);
+      const result = await usersCollection.insertOne(user);
+      res.send(result);
+    })
 
 
   }
