@@ -255,6 +255,29 @@ async function run() {
 
 
 
+//!=========================================
+    //!User admin investigation api , it is admin then it can make admin.
+    app.get('/users/admin/:email', async (req, res) => {
+      const email = req.params.email;
+      const query = { email }
+      const user = await usersCollection.findOne(query);
+      res.send({ isAdmin: user?.role === 'admin' });
+    })
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
