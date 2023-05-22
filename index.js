@@ -101,14 +101,42 @@ async function run() {
 
 
 
+
+
+
+
+
+
+
+
+    //*****************************************\\
+    //* get and post api for Products----------!!
+    //*****************************************\\
+
     //!=========================================
-    //!All products
+    //!All products get
     app.get('/products', async (req, res) => {
       const query = {};
       const cursor = productsCollection.find(query);
       const products = await cursor.toArray();
       res.send(products);
     })
+
+
+
+
+    //!=========================================
+    //!All products get
+    app.post('/products', async (req, res) => {
+      const product = req.body;
+      const result = await productsCollection.insertOne(product);
+      res.send(result);
+    })
+    //****************************************\\
+
+
+
+
 
 
 
