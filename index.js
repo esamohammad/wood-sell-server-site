@@ -325,11 +325,18 @@ async function run() {
 
 
 
+    // !====================================
+    // ! Category name project api - need just category name.(mongodb project some fields api) 
+    app.get('/categoryName', async (req, res) => {
+      const query = {}
+      const result = await categoriesCollection.find(query).project({ name: 1 }).toArray();
+      res.send(result);
+    })
 
 
 
 
-
+    
 
 
 
