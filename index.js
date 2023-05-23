@@ -375,6 +375,39 @@ async function run() {
 
 
 
+    // ******Temporary add.
+    //! temporary to update mobile field on user options
+    // ! It make a general field for all object of a collection. 
+    app.get('/addMobile', async (req, res) => {
+      const filter = {}
+      const options = { upsert: true }
+      const updatedDoc = {
+        $set: {
+          mobile: "01683476483"
+        }
+      }
+      const result = await usersCollection.updateMany(filter, updatedDoc, options);
+      res.send(result);
+    })
+
+
+
+
+
+
+    //!Booking pament api for single id.
+    app.get('/bookings/:id', async (req, res) => {
+      const id = req.params.id;
+      const query = { _id: new ObjectId(id) };
+      const booking = await bookingsCollection.findOne(query);
+      res.send(booking);
+    })
+
+
+
+
+
+
 
   }
 
