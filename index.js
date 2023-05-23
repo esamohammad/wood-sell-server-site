@@ -364,8 +364,14 @@ async function run() {
 
 
 
-    
-
+    // !====================================
+    // ! Delete Api- products . (single product)
+    app.delete('/products/:id', verifyJWT, async (req, res) => {
+      const id = req.params.id;
+      const filter = { _id: new ObjectId(id) };
+      const result = await productsCollection.deleteOne(filter);
+      res.send(result);
+    })
 
 
 
