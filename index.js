@@ -2,14 +2,16 @@ const express = require('express')
 const cors = require('cors')
 const { MongoClient, ServerApiVersion, ObjectId } = require('mongodb');
 const jwt = require('jsonwebtoken');
-const stripe = require("stripe")(process.env.STRIPE_SECRET_KEY);
 require('dotenv').config()
+const stripe = require("stripe")('sk_test_51NBJHPIdCHt5Pi0hCTlmkyFa2SrU5gX91gugug6TIDJPU93THzJzC09mlaeuW6JFEsCKCFLpB2BzF1dDuYSr4ndV00xOQW5mjW');
+
 
 const app = express()
 const port = process.env.PORT || 5000;
 
 //!middlewear
 app.use(cors())
+app.use(express.static("public"));
 app.use(express.json())
 
 
@@ -72,7 +74,7 @@ async function run() {
     const advertiseCollection = client.db('wood_sell').collection('advertise');
     const bookingsCollection = client.db('wood_sell').collection('bookings');
     const usersCollection = client.db('wood_sell').collection('users');
-
+    const paymentsCollection = client.db('wood_sell').collection('payments');
 
 
 
@@ -248,16 +250,63 @@ async function run() {
 
 
 
+    //!**************************************
+    // !added payment intent api- Stripe
+    app.post('/create-payment-intent', async (req, res) => {
+      const booking = req.body;
+      const price = booking.price;
+      const amount = price * 100;
+
+      const paymentIntent = await stripe.paymentIntents.create({
+        currency: 'usd',
+        amount: amount,
+        "payment_method_types": [
+          "card"
+        ],
+      });
+      res.send({
+        clientSecret: paymentIntent.client_secret,
+      });
+    })
 
 
-//!=========================================
-// ! JWT for preventing multiple authorization  requests from one email address.
+
+  // !added payment post api- Stripe
+    app.post('/payments', async (req, res) => {
+      const payment = req.body;
+      const result = await paymentsCollection.insertOne(payment);
+      const id = payment.bookingId
+      const filter = { _id: new ObjectId(id) }
+      const updatedDoc = {
+        $set: {
+          paid: true,
+          transactionId: payment.transactionId
+        }
+      }
+      const updatedResult = await bookingsCollection.updateOne(filter, updatedDoc)
+      res.send(result);
+    })
+
+
+    // !Get payment  data (paid) get api- Stripe
+    app.get('/payments', async (req, res) => {
+      const query = {};
+      const cursor = paymentsCollection.find(query);
+      const payments = await cursor.toArray();
+      res.send(payments);
+    })
+
+
+
+
+    //!=========================================
+    // ! JWT for preventing multiple authorization  requests from one email address.
     app.get('/jwt', async (req, res) => {
       const email = req.query.email;
       const query = { email: email };
       const user = await usersCollection.findOne(query);
       if (user) {
-        const token = jwt.sign({ email }, process.env.ACCESS_TOKEN, { expiresIn: '1h' })
+        const token = jwt.sign({ email }, process.env.ACCESS_TOKEN, { expiresIn: '1d' })
         return res.send({ accessToken: token });
       }
       console.log(user)
@@ -409,24 +458,7 @@ async function run() {
 
 
 
-    //!**************************************
-    // !added payment intent api- Stripe
-    app.post('/create-payment-intent', async (req, res) => {
-      const booking = req.body;
-      const price = booking.price;
-      const amount = price * 100;
 
-      const paymentIntent = await stripe.paymentIntents.create({
-        currency: 'usd',
-        amount: amount,
-        "payment_method_types": [
-          "card"
-        ]
-      });
-      res.send({
-        clientSecret: paymentIntent.client_secret,
-      });
-    })
 
 
 
