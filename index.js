@@ -9,13 +9,14 @@ const stripe = require("stripe")('sk_test_51NBJHPIdCHt5Pi0hCTlmkyFa2SrU5gX91gugu
 const app = express()
 const port = process.env.PORT || 5000;
 
+
+// !==================
 //!middlewear
 app.use(cors())
 app.use(express.static("public"));
 app.use(express.json())
 
-
-
+// !==================
 //!mongodb credentials
 const uri = `mongodb+srv://${process.env.DB_USER}:${process.env.DB_PASSWORD}@cluster0.ddkgs5g.mongodb.net/?retryWrites=true&w=majority`;
 console.log(uri)
@@ -27,11 +28,6 @@ const client = new MongoClient(uri, {
     deprecationErrors: true,
   }
 });
-
-
-
-
-
 
 
 //!=========================================
@@ -56,17 +52,13 @@ function verifyJWT(req, res, next) {
 }
 
 
-
-
-
-
-
-
 //!=========================================
 //!main db worksPlace
 async function run() {
   try {
 
+
+    // !====================================
     //!collection--DB
     const categoriesCollection = client.db('wood_sell').collection('categories');
     const productsCollection = client.db('wood_sell').collection('products');
@@ -75,7 +67,6 @@ async function run() {
     const bookingsCollection = client.db('wood_sell').collection('bookings');
     const usersCollection = client.db('wood_sell').collection('users');
     const paymentsCollection = client.db('wood_sell').collection('payments');
-
 
 
 
@@ -91,7 +82,6 @@ async function run() {
 
 
 
-
     //!=========================================
     //!Single category
     app.get('/categories/:id', async (req, res) => {
@@ -100,15 +90,6 @@ async function run() {
       const result = await categoriesCollection.findOne(filter)
       res.send(result)
     })
-
-
-
-
-
-
-
-
-
 
 
     //*****************************************\\
@@ -126,7 +107,6 @@ async function run() {
 
 
 
-
     //!=========================================
     //!All products get
     app.post('/products', async (req, res) => {
@@ -135,12 +115,6 @@ async function run() {
       res.send(result);
     })
     //****************************************\\
-
-
-
-
-
-
 
 
     //!=========================================
@@ -153,9 +127,7 @@ async function run() {
     })
 
 
-
-
-    //!***
+   
     //!=========================================
     //! product filter by category. 01,02,03,04 .
     app.get('/items/:id', async (req, res) => {
@@ -164,8 +136,6 @@ async function run() {
       const category = await itemsCollection.find(query).toArray();
       res.send(category);
     })
-
-
 
 
     //!=========================================
@@ -178,9 +148,6 @@ async function run() {
     })
 
 
-
-
-
     //!=========================================
     //!Single advertise by id
     app.get('/advertise/:id', async (req, res) => {
@@ -189,9 +156,6 @@ async function run() {
       const advertise = await advertiseCollection.findOne(query);
       res.send(advertise)
     })
-
-
-
 
 
     //!=========================================
@@ -214,14 +178,11 @@ async function run() {
     })
 
 
-
-
     //!=========================================
     //!Post Api -Bookings
     app.post('/bookings', async (req, res) => {
       const booking = req.body
       // console.log(booking);
-
 
 
       //!Limit Bookings
@@ -248,9 +209,7 @@ async function run() {
 
 
 
-
-
-    //!**************************************
+    // !====================================
     // !added payment intent api- Stripe
     app.post('/create-payment-intent', async (req, res) => {
       const booking = req.body;
@@ -269,8 +228,7 @@ async function run() {
       });
     })
 
-
-
+  // !====================================
   // !added payment post api- Stripe
     app.post('/payments', async (req, res) => {
       const payment = req.body;
@@ -287,7 +245,7 @@ async function run() {
       res.send(result);
     })
 
-
+    // !====================================
     // !Get payment  data (paid) get api- Stripe
     app.get('/payments', async (req, res) => {
       const query = {};
@@ -295,7 +253,6 @@ async function run() {
       const payments = await cursor.toArray();
       res.send(payments);
     })
-
 
 
 
@@ -315,10 +272,6 @@ async function run() {
 
 
 
-
-
-
-
     //!=========================================
     //!Get Api-Users.(NB: This is a open api, to be promoted by jwt and admin users.)
     app.get('/users', async (req, res) => {
@@ -328,11 +281,7 @@ async function run() {
     });
 
 
-
-
-
-
-//!=========================================
+    //!=========================================
     //!User admin investigation api , it is admin then it can make admin.
     app.get('/users/admin/:email', async (req, res) => {
       const email = req.params.email;
@@ -340,22 +289,6 @@ async function run() {
       const user = await usersCollection.findOne(query);
       res.send({ isAdmin: user?.role === 'admin' });
     })
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 
 
@@ -367,8 +300,6 @@ async function run() {
       const result = await usersCollection.insertOne(user);
       res.send(result);
     })
-
-
 
 
 
@@ -384,7 +315,6 @@ async function run() {
       if (user?.role !== 'admin') {
         return res.status(403).send({ message: 'forbidden access' })
       }
-
 
 
       const id = req.params.id;
@@ -412,7 +342,6 @@ async function run() {
 
 
 
-
     // !====================================
     // ! Delete Api- products . (single product)
     app.delete('/products/:id', verifyJWT, async (req, res) => {
@@ -422,9 +351,8 @@ async function run() {
       res.send(result);
     })
 
-
-
-    // ******Temporary add.
+    // !====================================
+    // !Temporary add.
     //! temporary to update mobile field on user options
     // ! It make a general field for all object of a collection. 
     app.get('/addMobile', async (req, res) => {
@@ -440,10 +368,7 @@ async function run() {
     })
 
 
-
-
-
-
+    // !====================================
     //!Booking pament api for single id.
     app.get('/bookings/:id', async (req, res) => {
       const id = req.params.id;
@@ -451,22 +376,6 @@ async function run() {
       const booking = await bookingsCollection.findOne(query);
       res.send(booking);
     })
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 
   }
@@ -487,3 +396,11 @@ app.get("/", (req, res) => {
 app.listen(port, () => {
   console.log(`Wood Sell is running on port: ${port}`);
 });
+
+
+//************************************************************************************************************** */
+//!  ************************\\
+//*     This is the End     *//
+//!  ************************\\
+//*        Thank you        *//
+//!  ************************\\
