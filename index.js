@@ -133,7 +133,7 @@ async function run() {
 
 
     //*****************************************\\
-    //* Email query api for Products----(My Sell Post)
+    //* Email query api for Products-(My Sell Post)
     //*****************************************\\
     app.get('/mySellPost', verifyJWT, async (req, res) => {
       const email = req.query.email;
@@ -298,7 +298,7 @@ async function run() {
 
 
     // !====================================
-    // !Get payment  data (paid) get api- Stripe
+    // !Get paymentList data  data (paid) get api- Stripe
     app.get('/payments', async (req, res) => {
       const query = {};
       const cursor = paymentsCollection.find(query);
@@ -399,6 +399,10 @@ async function run() {
 
 
 
+    
+    //*****************************************\\
+    //*---------------DELETE API --------------!!
+    //*****************************************\\
     // !====================================
     // ! Delete Api- products . (single product)
     app.delete('/products/:id', verifyJWT, async (req, res) => {
@@ -422,6 +426,19 @@ async function run() {
 
 
 
+
+    // !====================================
+    // ! Delete Api- Payments . (payments list)
+    app.delete('/payments/:id', verifyJWT, async (req, res) => {
+      const id = req.params.id;
+      const filter = { _id: new ObjectId(id) };
+      const result = await paymentsCollection.deleteOne(filter);
+      res.send(result);
+    })
+
+
+
+
     // !====================================
     // ! Delete Api- bookings . (myOrder)
     app.delete('/bookings/:id', verifyJWT, async (req, res) => {
@@ -430,6 +447,15 @@ async function run() {
       const result = await bookingsCollection.deleteOne(filter);
       res.send(result);
     })
+    //*****************************************\\
+    //*--------------DELETE API END------------!!
+    //*****************************************\\
+
+
+
+
+
+
 
 
 
