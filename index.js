@@ -151,7 +151,7 @@ async function run() {
     });
      //****************************************\\
 
-     
+
 
 
 
@@ -407,6 +407,19 @@ async function run() {
       const result = await productsCollection.deleteOne(filter);
       res.send(result);
     })
+
+    
+
+
+    // !====================================
+    // ! Delete Api- products . (mySellPost)
+    app.delete('/mySellPost/:id', verifyJWT, async (req, res) => {
+      const id = req.params.id;
+      const filter = { _id: new ObjectId(id) };
+      const result = await productsCollection.deleteOne(filter);
+      res.send(result);
+    })
+
 
 
 
