@@ -408,7 +408,7 @@ async function run() {
       res.send(result);
     })
 
-    
+
 
 
     // !====================================
@@ -420,6 +420,16 @@ async function run() {
       res.send(result);
     })
 
+
+
+    // !====================================
+    // ! Delete Api- bookings . (myOrder)
+    app.delete('/bookings/:id', verifyJWT, async (req, res) => {
+      const id = req.params.id;
+      const filter = { _id: new ObjectId(id) };
+      const result = await bookingsCollection.deleteOne(filter);
+      res.send(result);
+    })
 
 
 
