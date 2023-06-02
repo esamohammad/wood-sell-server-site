@@ -15,7 +15,7 @@ const port = process.env.PORT || 5000;
 // !==================
 //!middlewear
 app.use(cors())
-app.use(express.static("public"));
+// app.use(express.static("public"));
 app.use(express.json())
 
 
@@ -332,6 +332,31 @@ async function run() {
       const users = await usersCollection.find(query).toArray();
       res.send(users);
     });
+
+
+
+    //*****************************************\\
+    //* Buyer query api for -(All Buyers)
+    //*****************************************\\
+    app.get('/role', async (req, res) => {
+      const role = req.query.role;
+      const query = { role: role };
+      const result = await usersCollection.find(query).toArray();
+      res.send(result);
+    });
+     //****************************************\\
+    // http://localhost:5000/role?role=seller
+    // http://localhost:5000/role?role=buyer
+    // Learn more about the query parameters
+
+
+
+
+
+
+
+
+
 
 
 
