@@ -425,9 +425,10 @@ async function run() {
 
 
     
-    //*****************************************\\
-    //*---------------DELETE API --------------!!
-    //*****************************************\\
+    
+    //*****************************************************************\\
+    //*--------------------------DELETE API ---------------------------!!
+    //*****************************************************************\\
     // !====================================
     // ! Delete Api- products . (single product)
     app.delete('/products/:id', verifyJWT, async (req, res) => {
@@ -472,9 +473,22 @@ async function run() {
       const result = await bookingsCollection.deleteOne(filter);
       res.send(result);
     })
-    //*****************************************\\
-    //*--------------DELETE API END------------!!
-    //*****************************************\\
+
+
+
+
+    // !====================================
+    // ! Delete Api- users . (allBuyer & allSeller)
+    app.delete('/users/:id', verifyJWT, async (req, res) => {
+      const id = req.params.id;
+      const filter = { _id: new ObjectId(id) };
+      const result = await usersCollection.deleteOne(filter);
+      res.send(result);
+    })
+
+    //*****************************************************************\\
+    //*-------------------------DELETE API END-------------------------!!
+    //*****************************************************************\\
 
 
 
