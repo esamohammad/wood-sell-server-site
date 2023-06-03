@@ -138,11 +138,11 @@ async function run() {
     app.get('/mySellPost', verifyJWT, async (req, res) => {
       const email = req.query.email;
 
-      //!From JWT Function
-      const decodedEmail = req.decoded.email;
-      if (email !== decodedEmail) {
-        return res.status(403).send({ message: 'forbidden access' });
-      }
+      // //!From JWT Function (only admin use so off it for public purposes)
+      // const decodedEmail = req.decoded.email;
+      // if (email !== decodedEmail) {
+      //   return res.status(403).send({ message: 'forbidden access' });
+      // }
 
 
       const query = { email: email };
@@ -209,11 +209,11 @@ async function run() {
       const email = req.query.email;
 
       
-      //!From JWT Function
-      const decodedEmail = req.decoded.email;
-      if (email !== decodedEmail) {
-        return res.status(403).send({ message: 'forbidden access' });
-      }
+      // //!From JWT Function (only admin use so off it for public purposes)
+      // const decodedEmail = req.decoded.email;
+      // if (email !== decodedEmail) {
+      //   return res.status(403).send({ message: 'forbidden access' });
+      // }
 
 
       const query = { clientEmail: email }
