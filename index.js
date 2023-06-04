@@ -34,6 +34,7 @@ const client = new MongoClient(uri, {
     deprecationErrors: true,
   }
 });
+// ?==================
 
 
 
@@ -63,7 +64,7 @@ function verifyJWT(req, res, next) {
 
 
 //!=========================================
-//!main db worksPlace
+//!main Database worksPlace
 async function run() {
   try {
 
@@ -256,6 +257,7 @@ async function run() {
 
 
 
+
     // !====================================
     // !added payment intent api- Stripe
     app.post('/create-payment-intent', async (req, res) => {
@@ -274,6 +276,7 @@ async function run() {
         clientSecret: paymentIntent.client_secret,
       });
     })
+
 
 
 
@@ -297,6 +300,7 @@ async function run() {
 
 
 
+
     // !====================================
     // !Get paymentList data  data (paid) get api- Stripe
     app.get('/payments', async (req, res) => {
@@ -305,6 +309,7 @@ async function run() {
       const payments = await cursor.toArray();
       res.send(payments);
     })
+
 
 
 
@@ -335,6 +340,7 @@ async function run() {
 
 
 
+
     //*****************************************\\
     //* Buyer query api for -(All Buyers)
     //*****************************************\\
@@ -351,15 +357,6 @@ async function run() {
 
 
 
-
-
-
-
-
-
-
-
-
     //!=========================================
     //!User admin investigation api , it is admin then it can make admin.
     app.get('/users/admin/:email', async (req, res) => {
@@ -371,7 +368,6 @@ async function run() {
 
 
 
-
     //!=========================================
     //!Post Api-Users.(data send from client to save users into DB)
     app.post('/users', async (req, res) => {
@@ -380,7 +376,6 @@ async function run() {
       const result = await usersCollection.insertOne(user);
       res.send(result);
     })
-
 
 
 
@@ -413,6 +408,7 @@ async function run() {
 
 
 
+
     // !====================================
     // ! Category name project api - need just category name.(mongodb project some fields api) 
     app.get('/categoryName', async (req, res) => {
@@ -423,8 +419,6 @@ async function run() {
 
 
 
-
-    
     
     //*****************************************************************\\
     //*--------------------------DELETE API ---------------------------!!
@@ -440,7 +434,6 @@ async function run() {
 
 
 
-
     // !====================================
     // ! Delete Api- products . (mySellPost)
     app.delete('/mySellPost/:id', verifyJWT, async (req, res) => {
@@ -449,7 +442,6 @@ async function run() {
       const result = await productsCollection.deleteOne(filter);
       res.send(result);
     })
-
 
 
 
@@ -464,7 +456,6 @@ async function run() {
 
 
 
-
     // !====================================
     // ! Delete Api- bookings . (myOrder)
     app.delete('/bookings/:id', verifyJWT, async (req, res) => {
@@ -473,7 +464,6 @@ async function run() {
       const result = await bookingsCollection.deleteOne(filter);
       res.send(result);
     })
-
 
 
 
@@ -492,12 +482,6 @@ async function run() {
 
 
 
-
-
-
-
-
-
     // !====================================
     // !Temporary add.
     //! temporary to update mobile field on user options
@@ -513,7 +497,6 @@ async function run() {
       const result = await usersCollection.updateMany(filter, updatedDoc, options);
       res.send(result);
     })
-
 
 
 
@@ -549,8 +532,8 @@ app.listen(port, () => {
 
 
 //************************************************** */
-//!  ************************\\
-//*     This is the End     *//
-//!  ************************\\
-//*        Thank you        *//
-//!  ************************\\
+//!  ************************************************\\
+//*                  This is the End                *//
+//!  ************************************************\\
+//*                     Thank you                   *//
+//!  ************************************************\\
